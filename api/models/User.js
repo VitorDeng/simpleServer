@@ -37,22 +37,27 @@ module.exports = {
 
   // 创建（注册）用户前，对用户密码加密
   beforeCreate: function (values, cb) {
+    sails.log.debug('进入User.beforeCreate');
+
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(values.password, salt, function (err, hash) {
-        if (err) return cb(err);
-        values.password = hash;
-        // 执行用户定义回调
-        cb();
+        if (err) {
+          sails.log.warn('User.beforeCreate :: 异常：'+err);
+          return cb(err);
+        }else {
+          values.password = hash;
+          return cb();
+        }
       });
     });
   },
 
   afterCreate: function (createdUser, cb) {
-
+    cb();
   },
 
   afterUpdate: function (user, cb) {
-
+    cb();
   }
 
 };
